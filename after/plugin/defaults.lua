@@ -1,4 +1,3 @@
-
 -- Other options
 vim.opt.nu = true
 vim.opt.relativenumber = true
@@ -24,7 +23,7 @@ vim.opt.colorcolumn = "80"
 
 
 -- Other key maps
--- vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
+vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
@@ -60,101 +59,23 @@ vim.keymap.set("n", "Q", "<nop>")
 vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
 
-vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
-vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
-vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
-vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
+-- vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
+-- vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
+-- vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
+-- vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
+
+vim.keymap.set("n", "<C-j>", "<C-w>j")
+vim.keymap.set("n", "<C-k>", "<C-w>k")
+vim.keymap.set("n", "<C-h>", "<C-w>h")
+vim.keymap.set("n", "<C-l>", "<C-w>l")
+
+vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>")
+vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>")
+vim.keymap.set("n", "<C-Up>", ":resize -2<CR>")
+vim.keymap.set("n", "<C-Down>", ":resize -2<CR>")
 
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
--- nvim-tree
-vim.keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>") -- toggle file explorer
-
--- plugins
-
--- nvim tree
--- recommended settings from nvim-tree documentation
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-
--- change color for arrows in tree to light blue
--- vim.cmd([[ highlight NvimTreeIndentMarker guifg=#3FC5FF ]])
-
--- configure nvim-tree
-require("nvim-tree").setup({
-  -- change folder arrow icons
-  renderer = {
-    icons = {
-      glyphs = {
-        folder = {
-          arrow_closed = "", -- arrow when folder is closed
-          arrow_open = "", -- arrow when folder is open
-        },
-      },
-    },
-  },
-  -- disable window_picker for
-  -- explorer to work well with
-  -- window splits
-  actions = {
-    open_file = {
-      window_picker = {
-        enable = false,
-      },
-    },
-  },
-  -- 	git = {
-  -- 		ignore = false,
-  -- 	},
-})
-
-
--- which key
--- require("which-key").setup()
-
--- null-ls
-local null_ls = require("null-ls")
-
--- for conciseness
-local formatting = null_ls.builtins.formatting -- to setup formatters
-local diagnostics = null_ls.builtins.diagnostics -- to setup linters
-
--- to setup format on save
-local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
-
--- configure null_ls
-null_ls.setup({
-  -- setup formatters & linters
-  sources = {
-    --  to disable file types use
-    --  "formatting.prettier.with({disabled_filetypes: {}})" (see null-ls docs)
-    formatting.prettier, -- js/ts formatter
-    formatting.stylua, -- lua formatter
-    diagnostics.eslint_d.with({ -- js/ts linter
-      -- only enable eslint if root has .eslintrc.js (not in youtube nvim video)
-      condition = function(utils)
-        return utils.root_has_file(".eslintrc.js") -- change file extension if you use something else
-      end,
-    }),
-  },
-  -- configure format on save
-  on_attach = function(current_client, bufnr)
-    if current_client.supports_method("textDocument/formatting") then
-      vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-      vim.api.nvim_create_autocmd("BufWritePre", {
-        group = augroup,
-        buffer = bufnr,
-        callback = function()
-          vim.lsp.buf.format({
-            filter = function(client)
-              --  only use null-ls for formatting instead of lsp server
-              return client.name == "null-ls"
-            end,
-            bufnr = bufnr,
-          })
-        end,
-      })
-    end
-  end,
-})
+-- neo-tree
+vim.keymap.set("n", "<leader>l", ":Neotree toggle<CR>") -- toggle file explorer
